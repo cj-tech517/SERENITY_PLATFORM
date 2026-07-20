@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serenity English Platform</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f12;
+            --bg-card: #16161f;
+            --primary: #6366f1;
+            /* Violet néon */
+            --primary-hover: #4f46e5;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #27273a;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR (Navigation) --- */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-section {
+            padding: 20px 14px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+        }
+
+        .menu-item {
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+            color: var(--text-main);
+        }
+
+        .menu-item.active {
+            background-color: rgba(99, 102, 241, 0.12);
+            color: var(--text-main);
+            border-left: 3px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 12px;
+            background-color: var(--border);
+            color: var(--text-muted);
+        }
+
+        .active .badge {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 40%);
+        }
+
+        .header {
+            height: 70px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            justify-content: space-between;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .workspace {
+            padding: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: calc(100% - 80px);
+        }
+
+        /* --- VIDEO PLAYER COMPONENT --- */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* Ratio 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 40px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- WORKBOOK STYLING --- */
+        .workbook-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .workbook-tag {
+            display: inline-block;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .vocab-item {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .vocab-word {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .vocab-def {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .action-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.05));
+            border: 1px dashed var(--primary);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 32px;
+        }
+
+        .action-box h4 {
+            margin-top: 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+        <div class="brand">SERENITY ENGLISH</div>
+        <div class="menu-section">
+
+            <!-- SECTION 1: SERENITY FRAMEWORK (MINDSET & CONFIDENCE) -->
+            <div class="menu-title">Serenity Core</div>
+            <ul class="menu-list">
+                <li id="btn-serenity_m1" class="menu-item active" onclick="loadLesson('serenity_m1')">
+                    <span>M1: Root Foundations</span>
+                    <span class="badge">Mindset</span>
+                </li>
+                <li id="btn-serenity_m2" class="menu-item" onclick="loadLesson('serenity_m2')">
+                    <span>M2: Rock Bottom Resilience</span>
+                    <span class="badge">Natasha</span>
+                </li>
+            </ul>
+
+            <!-- SECTION 2: STREET TALK SERIES (DAVID BURKE) -->
+            <div class="menu-title">Street Talk Series</div>
+            <ul class="menu-list">
+                <li id="btn-street_talk_1" class="menu-item" onclick="loadLesson('street_talk_1')">
+                    <span>Street Talk 1: Everyday Life</span>
+                    <span class="badge">Slang</span>
+                </li>
+                <li id="btn-street_talk_2" class="menu-item" onclick="loadLesson('street_talk_2')">
+                    <span>Street Talk 2: Business</span>
+                    <span class="badge">Biz</span>
+                </li>
+                <li id="btn-street_talk_3" class="menu-item" onclick="loadLesson('street_talk_3')">
+                    <span>Street Talk 3: Sayings & Idioms</span>
+                    <span class="badge">Idioms</span>
+                </li>
+            </ul>
+
+            <!-- SECTION 3: SLANGMAN SERIES -->
+            <div class="menu-title">Slangman Guide</div>
+            <ul class="menu-list">
+                <li id="btn-slangman_speak_1" class="menu-item" onclick="loadLesson('slangman_speak_1')">
+                    <span>Speak 1: Street Speak</span>
+                    <span class="badge">Argot</span>
+                </li>
+            </ul>
+
+        </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT AREA -->
+    <main class="main-content">
+        <header class="header">
+            <h2 id="header-title">Loading...</h2>
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Status: <strong style="color: #10b981;">Active
+                    Lesson</strong></span>
+        </header>
+
+        <div class="workspace">
+            <!-- VIDEO PLAYER -->
+            <div class="video-wrapper">
+                <iframe id="video-player" src="" title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/dOw3G0hi4ys?si=-HVGkBDZBEOBjtN0"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+            <!-- WORKBOOK AREA -->
+            <div class="workbook-card">
+                <span id="workbook-tag" class="workbook-tag">SERENITY FRAMEWORK</span>
+                <h3 id="lesson-title" class="section-title">Vocabulary & Active Application</h3>
+
+                <p id="lesson-description" style="color: var(--text-muted); line-height: 1.6;">
+                    Loading lesson data...
+                </p>
+
+                <div id="vocab-container" class="vocabulary-grid">
+                    <!-- Inséré dynamiquement -->
+                </div>
+
+                <div class="action-box">
+                    <h4 id="action-title">🎙️ MISSION D'ACTIVATION</h4>
+                    <p id="action-text"
+                        style="margin-bottom: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">
+                        Loading mission details...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SYSTEM DATA & SWITCHING ENGINE -->
+    <script>
+        const lessonsData = {
+            // --- SERENITY FRAMEWORK ---
+            serenity_m1: {
+                headerTitle: "MODULE 1: Root Foundations & Mindset Shift",
+                tag: "SERENITY FRAMEWORK",
+                title: "Overcoming Speaking Anxiety",
+                description: "La base de la résilience linguistique. Ce module pose les fondations psychologiques indispensables pour débloquer la parole libre, accepter les erreurs comme données d'apprentissage et construire une présence vocale authentique.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/9oS5Gul8eSE", // À remplacer par ta vidéo M1
+                vocab: [
+                    { word: "Linguistic Resilience", def: "La capacité à continuer de s'exprimer naturellement malgré les erreurs de grammaire ou les oublis de mots." },
+                    { word: "Acoustic Shielding", def: "Technique d'écoute active pour isoler et reproduire les rythmes d'élocution des natifs." },
+                    { word: "Mindset Calibration", def: "Passer d'une posture défensive (peur du jugement) à une posture d'affirmation créative." }
+                ],
+                actionTitle: "🎙️ ESSAI DE CONFIANCE (1 min)",
+                actionText: "Enregistre-toi sans lire de notes. Raconte pourquoi tu as choisi d'intégrer le programme Serenity et quel est ton plus grand objectif linguistique cette année."
+            },
+            serenity_m2: {
+                headerTitle: "MODULE 2: From Rock Bottom to Resilience",
+                tag: "SERENITY FRAMEWORK",
+                title: "Vocabulary & Active Application (Angèle Interview)",
+                description: "Dans ce module, nous étudions l'interview d'Angèle pour analyser comment les structures complexes et l'expression naturelle de la confiance se mettent en place lorsqu'on passe d'un niveau intermédiaire à un niveau d'élite.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/9oS5Gul8eSE", // Vidéo d'Angèle
+                vocab: [
+                    { word: '"To be close to..."', def: 'Exprimer la proximité relationnelle ou spatiale. Attention à ne pas dire "close from" (erreur commise par Angèle).' },
+                    { word: 'Embedded Clauses', def: 'Intégrer proprement une question dans une phrase affirmative : "I didn\'t know what I was doing" au lieu de "what was I doing".' },
+                    { word: 'Reflexive Pronouns', def: 'Les pronoms réfléchis utilisés pour insister sur l\'autonomie ou l\'identité : "I did it myself" (Je l\'ai fait moi-même).' }
+                ],
+                actionTitle: "🎙️ MISSION D'ACTIVATION (Sans script)",
+                actionText: "Enregistre un mémo de 2 minutes. Raconte un moment difficile de ton parcours artistique ou pro où tu as dû faire preuve de résilience. Utilise au moins deux structures analysées aujourd'hui."
+            },
+
+            // --- STREET TALK SERIES ---
+            street_talk_1: {
+                headerTitle: "STREET TALK 1: Everyday Life Slang & Contractions",
+                tag: "STREET TALK SERIES",
+                title: "La Réduction des Mots & Conversational Shortcuts",
+                description: "Inspiré de Street Talk 1 de David Burke. Nous analysons ici la manière dont les natifs raccourcissent les mots dans les conversations courantes à la maison, entre amis ou dans les transports.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/shorts/N_22IGrkj78?t=6&feature=share",
+
+                vocab: [
+                    { word: '"Gonna" / "Wanna" / "Gotta"', def: "Contractions de 'going to', 'want to' et 'got to'. Indispensable pour fluidifier le débit de parole." },
+                    { word: '"To drop by"', def: "Passer voir quelqu'un à l'improviste. Ex: 'Feel free to drop by my studio anytime.'" },
+                    { word: '"Beat" / "Exhausted"', def: "Argot très commun pour dire 'crevé/fatigué'. Ex: 'Man, after that session I am totally beat.'" }
+                ],
+                actionTitle: "🔥 DIALOGUE D'ACTIVATION",
+                actionText: "Écris et enregistre un court dialogue entre un producteur et un artiste planifiant une séance de studio improvisée en utilisant 'Gotta', 'Drop by' et 'Beat'."
+            },
+            street_talk_2: {
+                headerTitle: "STREET TALK 2: Business & Work Slang",
+                tag: "STREET TALK SERIES",
+                title: "Le Jargon Informel du Travail et des Négociations",
+                description: "Inspiré de Street Talk 2. Connaître le vocabulaire informel utilisé par les collègues de bureau, les investisseurs ou lors des négociations de contrats informels.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/3kYldbvqHZk?t=648",
+                vocab: [
+                    { word: '"To touch base"', def: "Faire un point rapide avec un collaborateur. Ex: 'Let's touch base before the release.'" },
+                    { word: '"On the same page"', def: "Être sur la même longueur d'onde, d'accord sur les termes d'un projet." },
+                    { word: '"Low-hanging fruit"', def: "Les opportunités simples et rapides à saisir avant de s'attaquer aux gros chantiers." }
+                ],
+                actionTitle: "💼 EXERCICE CORPORATE",
+                actionText: "Rédige un message Slack ou WhatsApp professionnel ultra court (3 phrases) pour relancer un partenaire musical en plaçant 'touch base' et 'on the same page'."
+            },
+            street_talk_3: {
+                headerTitle: "STREET TALK 3: Sayings, Idioms & Emotional Expressions",
+                tag: "STREET TALK SERIES",
+                title: "Exprimer l'Intensité des Émotions",
+                description: "Inspiré de Street Talk 3. Analyse approfondie des expressions idiomatiques avancées pour exprimer la colère, la joie intense, la déception ou la surprise.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/UpV6iev8_aA?t=2",
+
+
+
+                vocab: [
+                    { word: '"Bite the bullet"', def: "Serrer les dents, faire face courageusement à une situation inévitable et difficile." },
+                    { word: '"Through thick and thin"', def: "Contre vents et marées, envers et contre tout (très utilisé pour décrire de vrais partenaires ou amis)." },
+                    { word: '"Hit the roof"', def: "Exploser de colère, péter un câble. Ex: 'When he heard the bad mix, he hit the roof.'" }
+                ],
+                actionTitle: "🎭 EMOTIONAL DELIVERY",
+                actionText: "Raconte une anecdote (vrai ou fictive) où quelqu'un a dû 'bite the bullet' pour sauver un projet artistique d'envergure."
+            },
+
+            // --- SLANGMAN GUIDE ---
+            slangman_speak_1: {
+                headerTitle: "SLANGMAN GUIDE TO STREET SPEAK 1",
+                tag: "SLANGMAN SERIES",
+                title: "L'Argot Populaire de la Pop Culture",
+                description: "Directement issu des méthodes de David Burke (Slangman). On se concentre ici sur l'argot pur de la pop culture, indispensable pour comprendre les dialogues de films, les paroles de chansons et les réseaux sociaux.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/LcoT_W2pUic",
+                vocab: [
+                    { word: '"To have a blast"', def: "S'éclater, passer un moment absolument génial. Ex: 'We had a blast at the concert last night.'" },
+                    { word: '"Chillax"', def: "Mélange de 'Chill' et 'Relax'. Signifie se détendre complètement." },
+                    { word: '"My bad"', def: "Expression universelle pour admettre une petite erreur. Signifie 'Autant pour moi / C'est ma faute'." }
+                ],
+                actionTitle: "🎵 SONGWRITING CHALLENGE",
+                actionText: "Rédige 4 lignes de paroles (lyrics) de style urbain/hip-hop en intégrant l'expression 'had a blast' et 'my bad'."
+            }
+        };
+
+        function loadLesson(lessonId) {
+            const data = lessonsData[lessonId];
+            if (!data) return;
+
+            // 1. Mise à jour des éléments textuels principaux
+            document.getElementById('header-title').innerText = data.headerTitle;
+            document.getElementById('workbook-tag').innerText = data.tag;
+            document.getElementById('lesson-title').innerText = data.title;
+            document.getElementById('lesson-description').innerText = data.description;
+            document.getElementById('action-title').innerText = "🎙️ " + data.actionTitle.replace(/🎙️|🔥|💼|🎭|🎵/g, '').trim();
+            document.getElementById('action-text').innerText = data.actionText;
+
+            // 2. Mise à jour de la vidéo (via no-cookie pour esquiver l'erreur 153)
+            document.getElementById('video-player').src = data.videoUrl;
+
+            // 3. Mise à jour dynamique de la grille de Vocabulaire
+            const vocabContainer = document.getElementById('vocab-container');
+            vocabContainer.innerHTML = '';
+
+            data.vocab.forEach(item => {
+                const vocabItem = document.createElement('div');
+                vocabItem.className = 'vocab-item';
+                vocabItem.innerHTML = `
+                    <div class="vocab-word">${item.word}</div>
+                    <div class="vocab-def">${item.def}</div>
+                `;
+                vocabContainer.appendChild(vocabItem);
+            });
+
+            // 4. Gestion visuelle du menu actif
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            const activeBtn = document.getElementById('btn-' + lessonId);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+        }
+
+        // Lancement par défaut du Module 1 de Serenity au démarrage
+        window.onload = function () {
+            loadLesson('serenity_m1');
+        };
+    </script>
+</body>
+
+</html>

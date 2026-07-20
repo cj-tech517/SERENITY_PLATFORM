@@ -1,0 +1,254 @@
+[
+    {
+        "model": "courses.lesson",
+        "pk": 1,
+        "fields": {
+            "title": "Slang 101: Everyday Basics",
+            "category": "Slang",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Listen to the pronunciation and try to write down your own sentence using one of the new words!",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 1,
+        "fields": {
+            "lesson": 1,
+            "title_or_word": "Ghost",
+            "definition_or_content": "To suddenly stop contacting someone without explanation.",
+            "example": "I thought we had a great date, but she decided to ghost me.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 2,
+        "fields": {
+            "lesson": 1,
+            "title_or_word": "Salty",
+            "definition_or_content": "Being upset, angry, or bitter about something minor.",
+            "example": "He is still salty because he lost the video game match.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 2,
+        "fields": {
+            "title": "Expressions of Approval",
+            "category": "Cool English",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Find a situation where you would use these words to compliment a friend.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 3,
+        "fields": {
+            "lesson": 2,
+            "title_or_word": "Goat",
+            "definition_or_content": "Greatest Of All Time.",
+            "example": "Many people believe that Michael Jordan is the goat of basketball.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 4,
+        "fields": {
+            "lesson": 2,
+            "title_or_word": "Fire",
+            "definition_or_content": "Amazing, excellent, or extremely cool.",
+            "example": "Have you heard his new album? The beats are absolute fire.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 3,
+        "fields": {
+            "title": "Work and Hustle",
+            "category": "Business",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Read the card and repeat the example sentence out loud.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 5,
+        "fields": {
+            "lesson": 3,
+            "title_or_word": "Burnout",
+            "definition_or_content": "Physical or mental collapse caused by overwork or stress.",
+            "example": "Working twelve hours a day without a break will quickly lead to burnout.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 4,
+        "fields": {
+            "title": "Socializing and Plans",
+            "category": "Social",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Think of a time when someone did this to you.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 6,
+        "fields": {
+            "lesson": 4,
+            "title_or_word": "Flake",
+            "definition_or_content": "A person who is unreliable and cancels plans at the last minute.",
+            "example": "Don't count on him to show up; he is a total flake.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 5,
+        "fields": {
+            "title": "Feelings and Drama",
+            "category": "Social",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Listen closely to the audio and practice your British or American accent!",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 7,
+        "fields": {
+            "lesson": 5,
+            "title_or_word": "Tea",
+            "definition_or_content": "Gossip or juicy personal information.",
+            "example": "Sit down with me and tell me all the recent tea about them.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 6,
+        "fields": {
+            "title": "Money and Wealth",
+            "category": "Street Talk",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "How would you translate this concept into your native slang?",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 8,
+        "fields": {
+            "lesson": 6,
+            "title_or_word": "Flex",
+            "definition_or_content": "To show off your achievements, skills, or physical appearance.",
+            "example": "Buying that expensive watch was just a massive flex.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 7,
+        "fields": {
+            "title": "Trust and Relationships",
+            "category": "Relationships",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Complete the interactive quiz at the bottom of the page to test your focus.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 9,
+        "fields": {
+            "lesson": 7,
+            "title_or_word": "Shady",
+            "definition_or_content": "Suspicious, dishonest, or untrustworthy behavior.",
+            "example": "I don't trust that website; their refund policy seems very shady.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 8,
+        "fields": {
+            "title": "Modern Idioms",
+            "category": "Idioms",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Use the audio button to hear the phrase in context.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 10,
+        "fields": {
+            "lesson": 8,
+            "title_or_word": "Bite the bullet",
+            "definition_or_content": "To get something over with because it is inevitable.",
+            "example": "I hate going to the dentist, but I just need to bite the bullet and go.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 9,
+        "fields": {
+            "title": "Daily Reactions",
+            "category": "Reactions",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Try to guess the missing word in the context challenge!",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 11,
+        "fields": {
+            "lesson": 9,
+            "title_or_word": "No cap",
+            "definition_or_content": "Seriously, no lie, or telling the absolute truth.",
+            "example": "That was the best burger I have ever eaten in my life, no cap.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.lesson",
+        "pk": 10,
+        "fields": {
+            "title": "Time and Urgency",
+            "category": "Everyday",
+            "video_embed_code": "",
+            "instructions_title": "MISSION D'ACTIVATION",
+            "instructions_text": "Listen to the full example and practice the correct sentence rhythm.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "courses.card",
+        "pk": 12,
+        "fields": {
+            "lesson": 10,
+            "title_or_word": "In no time",
+            "definition_or_content": "Very quickly or almost instantly.",
+            "example": "Don't worry about the drive; we will get there in no time.",
+            "created_at": "2026-07-16T12:00:00Z"
+        }
+    }
+]

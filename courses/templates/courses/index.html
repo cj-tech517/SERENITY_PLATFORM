@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serenity Platform - Espace Élève</title>
+    <style>
+        :root {
+            --bg-dark: #121214;
+            --sidebar-bg: #1a1a1e;
+            --card-bg: #222226;
+            --accent-color: #6366f1;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2e2e33;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lessons-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            padding: 10px;
+        }
+
+        .lesson-item {
+            padding: 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+
+        .lesson-item:hover {
+            background-color: #26262b;
+        }
+
+        .lesson-item.active {
+            background-color: #2e2e38;
+            border-color: var(--accent-color);
+        }
+
+        .lesson-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .lesson-title-nav {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .welcome-screen h1 {
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .lesson-container {
+            display: none;
+            flex-direction: column;
+            gap: 35px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .lesson-header-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Conteneur vidéo */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: #000;
+        }
+
+        .video-wrapper iframe,
+        .video-wrapper embed,
+        .video-wrapper object,
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .no-video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .mission-box {
+            background-color: #1e1b4b;
+            border-left: 4px solid var(--accent-color);
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .mission-title {
+            font-weight: bold;
+            color: #a5b4fc;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .mission-text {
+            line-height: 1.6;
+            color: #e0e7ff;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* GRILLE DE CARTES INTERACTIVES */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* STRUCTURE 3D DU FLIP */
+        .card-container {
+            perspective: 1000px;
+            height: 320px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-front {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        .card-front .card-word {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .card-back {
+            background-color: #1a1a24;
+            transform: rotateY(180deg);
+            align-items: flex-start;
+            text-align: left;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        .card-back-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .card-def {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .card-example {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--text-muted);
+            border-left: 2px solid var(--accent-color);
+            padding-left: 8px;
+            width: 100%;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* BOUTON AUDIO PRINCIPAL (FACE AVANT) */
+        .audio-btn {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid var(--accent-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            margin-top: 5px;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        /* BOUTONS AUDIO MINI (FACE ARRIÈRE) */
+        .audio-btn-mini {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .audio-btn-mini:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .flip-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: auto;
+        }
+
+        /* --- STYLES DU CONTEXT CHALLENGE (QUIZ) --- */
+        .quiz-section {
+            background-color: #16161a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .quiz-progress {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quiz-sentence {
+            font-size: 1.4rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 15px 0;
+            color: var(--text-main);
+            max-width: 800px;
+        }
+
+        .quiz-sentence .blank-space {
+            color: var(--accent-color);
+            border-bottom: 3px dashed var(--accent-color);
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        .quiz-option-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option-btn:hover:not(:disabled) {
+            border-color: var(--accent-color);
+            background-color: #2a2a30;
+            transform: translateY(-2px);
+        }
+
+        .quiz-option-btn.correct {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            border-color: var(--success-color) !important;
+            color: var(--success-color) !important;
+        }
+
+        .quiz-option-btn.wrong {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            border-color: var(--danger-color) !important;
+            color: var(--danger-color) !important;
+            opacity: 0.6;
+        }
+
+        .quiz-feedback {
+            font-size: 1.1rem;
+            font-weight: bold;
+            height: 24px;
+            margin-top: 10px;
+        }
+
+        .quiz-feedback.correct {
+            color: var(--success-color);
+        }
+
+        .quiz-feedback.wrong {
+            color: var(--danger-color);
+        }
+
+        .quiz-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .quiz-score-badge {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .quiz-reset-btn {
+            background-color: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quiz-reset-btn:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">Serenity Lessons</div>
+        <ul class="lessons-list" id="lessons-list"></ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="welcome-screen" id="welcome-screen">
+            <h1>Welcome back, Champ! 🚀</h1>
+            <p>Sélectionne une leçon dans la barre latérale pour commencer à travailler.</p>
+        </div>
+
+        <div class="lesson-container" id="lesson-container">
+            <h1 class="lesson-header-title" id="lesson-title">Nom de la leçon</h1>
+
+            <div class="video-wrapper" id="video-player-container"></div>
+
+            <div class="mission-box">
+                <div class="mission-title" id="instructions-title">MISSION D'ACTIVATION</div>
+                <div class="mission-text" id="instructions-text">Consignes de l'exercice...</div>
+            </div>
+
+            <div>
+                <h2 class="section-title">Vocabulaire & Expressions clés</h2>
+                <div class="cards-grid" id="cards-grid"></div>
+            </div>
+
+            <!-- NOUVELLE ZONE DU CONTEXT CHALLENGE -->
+            <div class="quiz-section" id="quiz-section" style="display: none;">
+                <h2 class="section-title" style="margin-bottom: 10px;">Context Challenge 🧠</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px;">Retrouve le bon mot d'argot pour compléter la
+                    phrase d'exemple !</p>
+                <div id="quiz-ui-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lessonsList = document.getElementById('lessons-list');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const lessonContainer = document.getElementById('lesson-container');
+
+            const lessonTitle = document.getElementById('lesson-title');
+            const videoPlayerContainer = document.getElementById('video-player-container');
+            const instructionsTitle = document.getElementById('instructions-title');
+            const instructionsText = document.getElementById('instructions-text');
+            const cardsGrid = document.getElementById('cards-grid');
+
+            // Éléments du Quiz
+            const quizSection = document.getElementById('quiz-section');
+            const quizUiContainer = document.getElementById('quiz-ui-container');
+
+            // Variables d'état du Quiz
+            let quizQuestions = [];
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let currentLessonCards = [];
+
+            // Distracteurs de secours au cas où une leçon contient trop peu de mots
+            const fallbackDistractors = ["gonna", "wanna", "gotta", "chill", "dude", "slay", "no cap", "bet"];
+
+            // Récupération de la liste des leçons
+            fetch('/api/lessons/')
+                .then(response => response.json())
+                .then(data => {
+                    lessonsList.innerHTML = '';
+                    if (!data.lessons || data.lessons.length === 0) {
+                        lessonsList.innerHTML = '<li style="padding: 15px; color: var(--text-muted)">Aucune leçon disponible</li>';
+                        return;
+                    }
+
+                    data.lessons.forEach(lesson => {
+                        const li = document.createElement('li');
+                        li.className = 'lesson-item';
+                        li.dataset.id = lesson.id;
+                        li.innerHTML = `
+                        <div class="lesson-category">${lesson.category}</div>
+                        <div class="lesson-title-nav">${lesson.title}</div>
+                    `;
+
+                        li.addEventListener('click', () => {
+                            document.querySelectorAll('.lesson-item').forEach(item => item.classList.remove('active'));
+                            li.classList.add('active');
+                            loadLesson(lesson.id);
+                        });
+
+                        lessonsList.appendChild(li);
+                    });
+                })
+                .catch(err => console.error('Erreur sidebar:', err));
+
+            // Chargement dynamique d'une leçon
+            function loadLesson(id) {
+                fetch(`/api/lessons/${id}/`)
+                    .then(response => response.json())
+                    .then(lesson => {
+                        welcomeScreen.style.display = 'none';
+                        lessonContainer.style.display = 'flex';
+
+                        lessonTitle.textContent = lesson.title;
+
+                        if (lesson.video_embed_code && lesson.video_embed_code.trim() !== "") {
+                            videoPlayerContainer.innerHTML = lesson.video_embed_code;
+                        } else {
+                            videoPlayerContainer.innerHTML = '<div class="no-video-placeholder">Aucune vidéo disponible pour cette leçon.</div>';
+                        }
+
+                        instructionsTitle.textContent = lesson.instructions_title;
+                        instructionsText.innerHTML = lesson.instructions_text ? lesson.instructions_text.replace(/\n/g, '<br>') : '';
+
+                        cardsGrid.innerHTML = '';
+                        currentLessonCards = lesson.cards || [];
+
+                        if (currentLessonCards.length === 0) {
+                            cardsGrid.innerHTML = '<p style="color: var(--text-muted)">Aucune fiche de vocabulaire.</p>';
+                            quizSection.style.display = 'none';
+                            return;
+                        }
+
+                        currentLessonCards.forEach(card => {
+                            const cardContainer = document.createElement('div');
+                            cardContainer.className = 'card-container';
+
+                            let imgHtml = '';
+                            if (card.card_visual) {
+                                imgHtml = `<img src="${card.card_visual}" class="card-img" alt="${card.title_or_word}">`;
+                            }
+
+                            let exampleHtml = '';
+                            if (card.example) {
+                                exampleHtml = `
+                                <div class="card-example" style="margin-top: auto; width: 100%;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                                        <div>
+                                            <strong style="color: var(--accent-color); font-size: 0.8rem; display: block; margin-bottom: 2px;">CONTEXT:</strong>
+                                            <span class="example-text">"${card.example}"</span>
+                                        </div>
+                                        <button class="audio-btn-mini" title="Listen to full sentence">🔊</button>
+                                    </div>
+                                </div>
+                            `;
+                            }
+
+                            cardContainer.innerHTML = `
+                            <div class="card-inner">
+                                <div class="card-front">
+                                    ${imgHtml}
+                                    <div class="card-word">${card.title_or_word}</div>
+                                    <button class="audio-btn">🔊 Pronounce</button>
+                                    <div class="flip-hint">Click to reveal meaning ↩</div>
+                                </div>
+                                <div class="card-back">
+                                    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 8px;">
+                                        <div class="card-back-title" style="margin-bottom: 0;">${card.title_or_word}</div>
+                                        <button class="audio-btn-mini" title="Listen to word">🔊</button>
+                                    </div>
+                                    <div class="card-def">${card.definition_or_content}</div>
+                                    ${exampleHtml}
+                                </div>
+                            </div>
+                        `;
+
+                            // Utilisation sécurisée des Datasets pour l'audio (évite de casser le HTML avec des quotes)
+                            const frontAudioBtn = cardContainer.querySelector('.card-front .audio-btn');
+                            frontAudioBtn.dataset.text = card.title_or_word;
+
+                            const backAudioWordBtn = cardContainer.querySelector('.card-back .audio-btn-mini');
+                            backAudioWordBtn.dataset.text = card.title_or_word;
+
+                            if (card.example) {
+                                const backAudioExBtn = cardContainer.querySelector('.card-example .audio-btn-mini');
+                                backAudioExBtn.dataset.text = card.example;
+                            }
+
+                            // Événement Flip
+                            cardContainer.addEventListener('click', (e) => {
+                                if (e.target.closest('.audio-btn') || e.target.closest('.audio-btn-mini')) return;
+                                cardContainer.classList.toggle('flipped');
+                            });
+
+                            // Événements Audio
+                            cardContainer.querySelectorAll('.audio-btn, .audio-btn-mini').forEach(btn => {
+                                btn.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const textToSpeak = btn.dataset.text;
+                                    speakEnglish(textToSpeak);
+                                });
+                            });
+
+                            cardsGrid.appendChild(cardContainer);
+                        });
+
+                        // Initialisation du Quiz pour cette leçon
+                        initQuiz();
+                    })
+                    .catch(err => console.error('Erreur leçon:', err));
+            }
+
+            // --- LOGIQUE DU QUIZ (CONTEXT CHALLENGE) ---
+            function initQuiz() {
+                const eligibleCards = currentLessonCards.filter(card => card.example && card.example.trim() !== "");
+
+                if (eligibleCards.length === 0) {
+                    quizSection.style.display = 'none';
+                    return;
+                }
+
+                quizSection.style.display = 'block';
+                quizQuestions = eligibleCards.map(card => {
+                    const word = card.title_or_word;
+                    const sentence = card.example;
+
+                    const regex = new RegExp(`\\b${escapeRegExp(word)}\\b`, 'gi');
+                    const hiddenSentence = sentence.replace(regex, "______");
+
+                    const otherWords = currentLessonCards
+                        .map(c => c.title_or_word)
+                        .filter(w => w !== word);
+
+                    // Si pas assez de distracteurs locaux, on pioche dans la liste globale de secours
+                    while (otherWords.length < 3) {
+                        const randomFallback = fallbackDistractors[Math.floor(Math.random() * fallbackDistractors.length)];
+                        if (!otherWords.includes(randomFallback) && randomFallback !== word) {
+                            otherWords.push(randomFallback);
+                        }
+                    }
+
+                    const distractors = shuffleArray(otherWords).slice(0, 3);
+                    const options = shuffleArray([word, ...distractors]);
+
+                    return {
+                        originalSentence: sentence,
+                        hiddenSentence: hiddenSentence,
+                        correctAnswer: word,
+                        options: options
+                    };
+                });
+
+                quizQuestions = shuffleArray(quizQuestions);
+                currentQuestionIndex = 0;
+                score = 0;
+
+                renderQuestion();
+            }
+
+            function renderQuestion() {
+                quizUiContainer.innerHTML = '';
+
+                if (currentQuestionIndex >= quizQuestions.length) {
+                    renderQuizResults();
+                    return;
+                }
+
+                const question = quizQuestions[currentQuestionIndex];
+                const container = document.createElement('div');
+                container.className = 'quiz-container';
+
+                const styledSentence = question.hiddenSentence.replace("______", '<span class="blank-space">? ? ?</span>');
+
+                container.innerHTML = `
+                <div class="quiz-progress">Question ${currentQuestionIndex + 1} of ${quizQuestions.length}</div>
+                <div class="quiz-sentence">${styledSentence}</div>
+                <div class="quiz-options" id="options-box"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+            `;
+
+                quizUiContainer.appendChild(container);
+
+                const optionsBox = document.getElementById('options-box');
+                const feedbackBox = document.getElementById('quiz-feedback');
+
+                question.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quiz-option-btn';
+                    btn.textContent = option;
+
+                    btn.addEventListener('click', () => {
+                        optionsBox.querySelectorAll('.quiz-option-btn').forEach(b => b.disabled = true);
+
+                        if (option === question.correctAnswer) {
+                            btn.classList.add('correct');
+                            feedbackBox.className = 'quiz-feedback correct';
+                            feedbackBox.textContent = '🎉 Awesome! That is correct!';
+                            score++;
+                            speakEnglish("Excellent!");
+                        } else {
+                            btn.classList.add('wrong');
+                            feedbackBox.className = 'quiz-feedback wrong';
+                            feedbackBox.textContent = `No, the correct answer was "${question.correctAnswer}".`;
+
+                            optionsBox.querySelectorAll('.quiz-option-btn').forEach(b => {
+                                if (b.textContent === question.correctAnswer) {
+                                    b.classList.add('correct');
+                                }
+                            });
+                            speakEnglish("Not quite.");
+                        }
+
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            renderQuestion();
+                        }, 2500);
+                    });
+
+                    optionsBox.appendChild(btn);
+                });
+            }
+
+            function renderQuizResults() {
+                const percentage = Math.round((score / quizQuestions.length) * 100);
+                let evaluationMessage = "Keep practicing, you'll get there! 💪";
+
+                if (percentage === 100) {
+                    evaluationMessage = "Perfect score! You totally nail this slang! 🏆";
+                } else if (percentage >= 70) {
+                    evaluationMessage = "Great job! You've got a solid grasp on these expressions. 🔥";
+                }
+
+                quizUiContainer.innerHTML = `
+                <div class="quiz-results">
+                    <h2>Challenge Completed!</h2>
+                    <div class="quiz-score-badge">${score} / ${quizQuestions.length}</div>
+                    <p style="font-size: 1.1rem; color: var(--text-muted);">${evaluationMessage}</p>
+                    <button class="quiz-reset-btn" id="quiz-retry-btn">Try Again</button>
+                </div>
+            `;
+
+                document.getElementById('quiz-retry-btn').addEventListener('click', () => {
+                    initQuiz();
+                });
+            }
+
+            // Outils d'aide
+            function shuffleArray(array) {
+                const arr = [...array];
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+            // --- SYNTHÈSE VOCALE SÉCURISÉE ---
+            function speakEnglish(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+
+                    const utterance = new SpeechSynthesisUtterance(text);
+
+                    // Récupération dynamique des voix pour contourner le délai de chargement asynchrone
+                    const voices = window.speechSynthesis.getVoices();
+                    const englishVoice = voices.find(voice =>
+                        voice.lang === 'en-US' ||
+                        voice.lang === 'en-GB' ||
+                        voice.lang.startsWith('en-')
+                    );
+
+                    if (englishVoice) {
+                        utterance.voice = englishVoice;
+                        utterance.lang = englishVoice.lang;
+                    } else {
+                        utterance.lang = 'en-US';
+                    }
+
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+
+            // Trigger passif pour forcer l'OS à charger les voix en arrière-plan
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+        });
+    </script>
+</body>
+
+</html>
